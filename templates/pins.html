@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+        <!--online_fonts-->
+        	<link href="//fonts.googleapis.com/css?family=Sansita:400,400i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+        	<link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+        <!--//online_fonts-->
+        <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
+          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <script src="/static/js/script.js"/></script>
+
+        <link href="//fonts.googleapis.com/css?family=Old+Standard+TT:400,400i,700" rel="stylesheet">
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'><!--web font-->
+        <!-- //web font -->
+        <script>addEventListener("load", function() { 
+  setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+        <script>addEventListener("load", function() 
+{ setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+</script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <style>
+        body{
+                margin: 25px;
+                background:{{result["background_color"]}};
+                color: {{result["text_color"]}};
+                font-style: {{result["background_font"]}};
+                font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
+        }
+        @page{
+                size: Letter;
+                margin: 0.0cm;
+          }
+
+        .signature{
+                border: 0;
+                border-bottom: 1px solid {{result["line_color"]}}
+        }
+        .row{
+                margin: 30px;
+                position: center;
+        }
+        #letter_heading{
+                text-align: {{result["ld_position"]}};
+                color: {{result["l_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                {%if result["shadow"] == 'on' %}
+                text-shadow: 1px 1px black;
+                {%endif%}
+                font-style: {{result["l_font"]}};
+                font-size: {{result["l_fontsize"]}};
+                font-weight: {{result["l_weight"]}}
+        }  
+        #school_details{
+                text-align: {{result["sd_position"]}};
+                color: {{result["sd_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                font-style: {{result["sd_font"]}};
+                font-size: {{result["sd_fontsize"]}};
+                font-weight: {{result["sd_weight"]}}
+        } 
+        #student_details{
+                text-align: {{result["std_position"]}};
+                color: {{result["std_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                font-style: {{result["std_font"]}};
+                font-size: {{result["std_fontsize"]}};
+                font-weight: {{result["std_weight"]}}
+        } 
+        table, td, th{
+                border: 1px;
+                border-color: white;
+                border-style: solid;
+        }
+        #comment{
+                width: 100%;
+        }
+
+        {%if result["watermark"] == 'on' %}
+
+
+
+        #background{
+                z-index: 0;
+                color: yellow;
+                position: absolute;
+        }
+        #bg-text{
+                color: lightgrey;
+                font-size: 200px;
+                transform: rotate(300deg);
+                -webkit-transform: rotate(300deg);
+        }
+        #content{
+                position: relative;
+                z-index: 1;
+        }
+{%endif%}
+        </style>
+        <!-- Custom Theme files -->
+        <title>{{schoolInfo[0]["school_name"]}}</title>
+    </head>
+<body>
+        {%if result["watermark"] == 'on' %}
+
+        <div id="background"> <p id="bg-text">{{schoolInfo[0]["school_name"]}}</p></div>
+        <div id="content">
+        {%endif%}
+  <div id="letter_heading">
+  {{schoolInfo[0]["school_name"].upper()}}
+</div>
+<div id="school_details">
+       SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}
+       {%if result["sd_email"]%}
+       <div>EMAIL ADDRESS: {{result["sd_email"]}}</div> 
+       {%endif%}
+       {%if result["admin_email"] == 'on' %}
+       <div>{{schoolInfo[0]["email"].upper()}}</div>
+       {%endif%}
+       {%if result["address"]%}
+       <div> ADDRESS: {{result["address"]}}</div> 
+       {%endif%}
+       {%if result["po_box"]%}
+       <div>PO BOX: {{result["po_box"]}}</div> 
+       {%endif%}
+       {%if result["phone"]%}
+       <div>PHONE NUMBER: {{result["phone"]}}</div> 
+       {%endif%}
+       {%if result["next_term"]%}
+       <div>NEXT TERM RESUMES: {{result["next_term"]}}</div> 
+       {%endif%}
+       {%if result["sd_other"]%}
+       <div> {{result["sd_other"]}}</div> 
+       {%endif%}
+</div>
+{% for klass in classlists%}
+<div id="classname"><b> CLASS: {{classData[loop.index-1]["classname"].upper()}}</b></div>
+
+{% set class_id = classData[loop.index-1]["id"]|string %}
+{%if class_id|length == 1%}
+{%set class_identifier = "00"+class_id|string%}
+{%elif class_id|length == 2%}
+{%set class_identifier = "0"+class_id|string%}
+{%else%}
+{%set class_identifier = class_id|string%}
+{%endif%}
+<table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
+
+        <thead>
+                <tr>
+                <th>Exam number</th>
+                <th>Name</th>
+                <th>Pin</th>
+                </tr>
+        </thead>
+        <tbody>
+{%for student in klass%}
+{% set student_id = student["id"]|string %}
+{% set button_id = student_id+"_"+class_id %}
+{%if student_id|length == 1%}
+{%set student_identifier = "00"+student_id|string%}
+{%elif student_id|length == 2%}
+{%set student_identifier = "0"+student_id|string%}
+{%else%}
+{%set student_identifier = student_id|string%}
+{%endif%}
+{%set final_identifier = student_identifier+class_identifier+schoolInfo[0]["id"]|string%}
+        <tr>
+        <td>{{final_identifier}}</td>
+        <td>{{student["firstname"].upper()}} {{student["surname"].upper()}} {{student["othername"].upper()}}</td>
+        <td>{{student["pin"]}}</td>
+        </tr>      
+{%endfor%}
+</tbody>
+</table>
+ {%endfor%}
+</body>

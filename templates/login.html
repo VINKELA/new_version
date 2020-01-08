@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block main %}
+<div  class="row main_pages">
+	<div class="col blue"><h2>Welcome!</h2>
+		<p><h5>New here? <a href="/register">Register a school account</a> for free</h5><p>
+		<p><h5>Already Registered? then Log-in  to make awesome looking results.</h5><p>
+		<p><h5>Or just curious? Try out a <a href="/demo"><span id="demo" class="red" >DEMO</span></a> to see how it works.</h5><p>
+	</div>
+	<div class="col form-w3ls">
+			<div id="tab-group" class="tab-group cl-effect-4 row">
+				<li class="tab active col"><a href="#signin-agile"><b>Log-in</b></a></li>
+				<li class="tab col"><a href="#signup-agile"><b>Register</a></b></li>
+			</div>
+			 <div class="tab-content" id="login-tab-content">
+				<div id="signin-agile">
+					 <form  action = "/login" method="post" id="login_form">
+						 <input type="text" id="username" name="username" placeholder="User Name" required="required"/>
+						 <div class="red" id="signin_message"></div>
+						 <input type="password" id="password" name="password" placeholder="password" required="required"/>
+						 <div class="red" id="password_message"></div>
+						 <div class="psw">Forgot <a href="/change_password">password?</a></div>
+						 <div><input name="remember_me" type="checkbox" id="brand" value="checked">Remember me</div>
+						 <button type="submit" id="login" class="sign-in" value="Sign In">log-in</button>
+					 </form>
+
+				</div>
+				  <div id="signup-agile">
+						<form id="register" action="/register" method="post">
+								 <h4 class="blue"> REGISTER FOR FREE!</h4>
+							<hr>
+							 <h5 class="message"><b>School information</b></h5>
+						   <input  name="school_name" placeholder="school name" type="text" required="required">
+						   <div class="red" id="schoolname_message"></div>
+
+							<input  name="email" placeholder="email" type="email" required="required"/>
+							<div class="red" id="email_message"></div>
+
+							<div class="row">
+
+								<div  class="col">
+									<select name="term" id="term"  aria-required="true">
+									<option  value="" selected="" disabled="">term</option>
+											<option  value="1">first</option>
+											<option  value="2">second</option>
+											<option  value="3">third</option>
+									</select>
+									<div class="arrow"></div>
+									<div class="red" id="term_message"></div>
+								</div>
+
+								<div  class="col">
+									<select name="school_session" id="school_session"  aria-required="true" >
+									<option  value="">session</option>
+											<option  value="2018/2019">2018/2019</option>
+											<option  value="2019/2020">2019/2020</option>
+											<option  value="2020/2021">2020/2021</option>
+									</select>
+									<div class="arrow"></div>
+									<div class="red" id="session_message"></div>
+								</div>
+							</div>
+
+							<hr>
+							<h5 class="message"><b>login details</b></h5>
+							<input  name="username" placeholder="Username" type="text" id="user" required="required"/>
+							<div class="red" id="username_message"></div>
+
+							<div><input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
+								<div class="red" id="password_message"></div></div>
+							<div>
+							  <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
+							</div>
+							<input  name="confirmation" placeholder=" confirm Password" type="password" required="required"/>
+							<div class="red" id="confirmation_message"></div>
+
+							<p>By clicking Register, you agree to the <a href="/terms" target="_blank">Terms of Service</a> and you acknowledge that Schoolresult and each Member process your school's and personal data in accordance with the <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+
+							<button type="submit" class="sign-in" id="submit_registration" value="Register">Register</button>
+							</div>
+					</form>
+				 </div>
+			 </div><!-- tab-content -->
+
+		 </div> <!-- /form -->	
+</div>
+<!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/register.js"></script>
+	<script src="/static/js/index.js"></script>
+<!-- /js files -->
+{% endblock %}

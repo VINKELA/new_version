@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}
+new session update
+{% endblock %}
+{% block main %}
+  <form action="/session_update" id="session_update_form" method="post">
+    {%set lent = session_data|length%}
+    <input type="hidden" id="class_length" value="{{lent}}"/>
+
+<table class="table table-striped">
+  <thead>
+    <th>Last session class name</th>
+    <th>New session class name</th>
+    <th>section</th>
+  </thead>
+  <tbody>
+  {%for clas in session_data %}
+    {%set id = clas["id"]|string %}
+    {%set name = "name"+id%}
+    {%set old_name = "old_name"+id%}
+    {%set section = "section"+id%}
+    {%set n = "new"+loop.index|string%}
+    {%set o = "old"+loop.index|string%}  
+    {%set message = "message"+loop.index|string%}
+        <tr>
+            <td><b>{{clas["classname"].upper()}}</b></td>
+            <input type="hidden" id="{{o}}" name="{{old_name}}" value="{{clas["classname"]}}"/>
+            <td><input type = "text" id="{{n}}" name="{{name}}" placeholder="new name"/><div id="{{message}}" class="red"></div> </td>
+            <td><select name="{{section}}"   aria-required="true">
+              <option   selected="" value="{{clas["section"]}}">{{clas["section"]}}</option>
+              <option  value="pre-nursery">pre-nursery</option>
+              <option  value="nursery">nursery</option>
+              <option  value="primary">primary</option>
+              <option  value="secondary">secondary</option>
+              </select>
+              <div class="arrow"></div>
+            </td>
+        </tr>
+  {%endfor%}
+</tbody>
+</table>
+<div class="row">
+    <div class="form-w3ls col">
+            <button class="sign-in" id="session_update_button"  type="submit">Submit</button></div>
+            <input type="hidden" name="selected_term" value="{{selected_term}}"/>
+            <input type="hidden" name="selected_session" value="{{selected_session}}"/>
+    </form>
+    <div class="form-w3ls col">
+      <form action="/cancel_portfolio"  method="POST">  <input type="hidden"  name="class_id"><button class="sign-in" id="cancel"  type="submit">Back</button></form>
+    </div>
+    </form>
+      
+   <!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/session_update.js"></script>
+  <!-- /js files -->
+
+{% endblock %}

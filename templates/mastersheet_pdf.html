@@ -1,0 +1,269 @@
+
+
+
+
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        </script>
+        <!--online_fonts-->
+        	<link href="//fonts.googleapis.com/css?family=Sansita:400,400i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+        	<link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+        <!--//online_fonts-->
+        <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
+          <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+          <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+          <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <script src="/static/js/script.js"/></script>
+
+        <link href="//fonts.googleapis.com/css?family=Old+Standard+TT:400,400i,700" rel="stylesheet">
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'><!--web font-->
+        <!-- //web font -->
+        <script>addEventListener("load", function() { 
+  setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+        <script>addEventListener("load", function() 
+{ setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+</script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+ 
+        <style>
+          body{
+                  margin: 25px;
+                  background-color: {{result["background_color"]}};
+                  color: {{result["text_color"]}};
+                  font-style: {{result["background_font"]}};
+                  font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
+          }
+          @page{
+                size: Letter;
+                margin: 0.0cm;
+          }
+
+          #letter_heading{
+                  text-align: {{result["ld_position"]}};
+                  color: {{result["l_color"]}};
+                  text-decoration: none;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                  line-height: 1.8;
+                  text-direction: rtl;
+                  word-spacing: 10px;
+                  {%if result["shadow"] == 'on' %}
+                  text-shadow: 1px 1px black;
+                  {%endif%}
+                  font-style: {{result["l_font"]}};
+                  font-size: {{result["l_fontsize"]}};
+                  font-weight: {{result["l_weight"]}}
+          }  
+          #school_details{
+                  text-align: {{result["sd_position"]}};
+                  color: {{result["sd_color"]}};
+                  text-decoration: none;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                  line-height: 1.8;
+                  text-direction: rtl;
+                  word-spacing: 10px;
+                  font-style: {{result["sd_font"]}};
+                  font-size: {{result["sd_fontsize"]}};
+                  font-weight: {{result["sd_weight"]}}
+          } 
+          #class_details{
+                text-align: {{result["std_position"]}};
+                color: {{result["std_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                font-style: {{result["std_font"]}};
+                font-size: {{result["std_fontsize"]}};
+                font-weight: {{result["std_weight"]}}
+        } 
+
+          table, td, th{
+                  border: 1px;
+                  border-color: white;
+                  border-style: solid;
+          }
+          #comment{
+                  width: 100%;
+          }
+  
+          {%if result["watermark"] == 'on' %}
+  
+  
+  
+          #background{
+                  z-index: 0;
+                  background: white;
+                  color: yellow;
+                  position: absolute;
+          }
+          #bg-text{
+                  color: lightgrey;
+                  font-size: 200px;
+                  transform: rotate(300deg);
+                  -webkit-transform: rotate(300deg);
+          }
+          #content{
+                  position: relative;
+                  z-index: 1;
+          }
+  {%endif%}
+          </style>
+          <!-- Custom Theme files -->
+          <title>CLASS RESULT</title>
+      </head>
+      <body>
+        {%set list1 = schoolInfo[0]["school_name"].split(" ") %}
+{%if result["watermark"] == 'on' %}
+
+<div id="background"> <p id="bg-text">{{schoolInfo[0]["school_name"]}}</p></div>
+<div id="content">
+{%endif%}
+<div id="letter_heading">
+{{schoolInfo[0]["school_name"].upper()}}
+</div>
+<div id="school_details">
+{%if result["sd_email"]%}
+<div>EMAIL ADDRESS: {{result["sd_email"]}}</div> 
+{%endif%}
+{%if result["admin_email"] == 'on' %}
+<div>{{schoolInfo[0]["email"].upper()}}</div>
+{%endif%}
+{%if result["address"]%}
+<div> ADDRESS: {{result["address"]}}</div> 
+{%endif%}
+{%if result["po_box"]%}
+<div>PO BOX: {{result["po_box"]}}</div> 
+{%endif%}
+{%if result["phone"]%}
+<div>PHONE NUMBER: {{result["phone"]}}</div> 
+{%endif%}
+{%if result["next_term"]%}
+<div>NEXT TERM RESUMES: {{result["next_term"]}}</div> 
+{%endif%}
+{%if result["sd_other"]%}
+<div> {{result["sd_other"]}}</div> 
+{%endif%}
+
+</div>
+<div id="class_details">
+  <div>Class: {{classData[0]["classname"].upper()}} </div>  
+  <div>Sectio: {{classData[0]["section"].upper()}} </div>
+  <div>Session: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</div>
+  <div>
+        <h5>Result summary:</h5>
+        <h6>Total number of students: {{mastersheet|length}}</h6>
+        <h6>Total number of subjects: {{subjectData|length}}</h6>
+        <h6>Total number of passes: {{result["no_of_passes"]}}</h6>
+        <h6>Total number of failures: {{result["no_of_failures"]}}</h6>
+        {%if (result["no_of_passes"] + result["no_of_failures"])|int < 0%}
+        <h6>Percentage pass: 0%</h6>
+        <h6>Percentage failure: 0%</h6>
+        {%else%}
+        {%set percentage_pass = (result["no_of_passes"]*100)/(result["no_of_passes"] + result["no_of_failures"])%}
+        <h6>Percentage pass: {{"%.2f"|format(percentage_pass)}}%</h6>
+        <h6>Percentage failure: {{"%.2f"|format(100-percentage_pass)}}%</h6>
+        {%endif%}
+        
+        <h6>Class Teacher: {{classData[0]["surname"].upper()}} {{classData[0]["firstname"].upper()}}</h6>        
+  </div>
+  </div>
+  <div>
+        <table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
+                <thead>
+                        <tr>
+                        <th>NO</th>
+                        <th>RESULT SUMMARY</th>
+                        <th>TOTAL</th>
+                        <th>AVERAGE</th>
+                        <th>POSITION</th>
+                        <th>NUMBER OF SUBJECT PASSED</th>
+                        <th>NUMBER OF SUBJECT FAILED</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                {%for data in mastersheet%}
+                                {%set index =  loop.index - 1%}
+                              <tr>
+                                <td>{{data["id"]}}</td>
+                                <td>{{class_list[index]["surname"].upper()}} {{class_list[index]["firstname"].upper()}} {{class_list[index]["othername"].upper()}}</td>
+                                <td>{{data["total_score"]}}</td>
+                                {%set subject_length = subjectData|length %}
+                                {%if subject_length < 1%}
+                                <td>{{"%.2f"|format(0)}}</td>
+                                {%else%}
+                                <td>{{"%.2f"|format(data["total_score"]/subject_length|float) }}</td>
+                                {%endif%}
+                                <td>{{data["position"]}}</td>
+                                <td>{{subjectData|length - gradeData[index]["no_of_F"]|int}}</td>
+                                <td>{{gradeData[index]["no_of_F"]}}</td>                                      
+                              </tr>
+                              {%endfor%}
+
+                        </tbody>
+                        </table>
+        
+</div>
+
+         {%for subject in subjectData%}
+
+            <div class="table_area">
+                <table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
+                <thead>
+                <tr>
+                <th>NO</th>
+                <th>NAME</th>
+                <th colspan="6" scope ="col">{{subject['name'].upper()}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                        <tr>                        
+                                <td></td>
+                                <td></td>
+
+                               <td>CA</td><td>TEST</td><td>EXAM</td><td>TOTAL</td><td>GRADE</td><td>SUBJECT POSITION</td>
+                        </tr>
+                        {%for data in mastersheet%}
+                        {%set index =  loop.index - 1%}
+                      <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
+                        {%set subject_id = subject["id"]|string%}
+                        <td>{{caData[index][subject_id]}}</td>
+                        <td>{{testData[index][subject_id]}}</td>
+                        <td>{{examData[index][subject_id]}}</td>
+                        <td>{{data[subject_id]}}</td>
+                        <td>{{gradeData[index][subject_id]}}</td>
+                        <td>{{subject_position[index][subject_id]}}</td>
+                      </tr>
+                      {% endfor %}
+                      {%set fail_percent = (subject["no_of_F"]*100)/(mastersheet|length)%}
+                      {%set pass_percent = 100 - fail_percent%}
+                      <tr>
+                                <td colspan="8">Subject summary:
+                                Number of  failures: {{subject["no_of_F"]}}&nbsp; &nbsp;
+                                 Number of  passes: {{mastersheet|length - subject["no_of_F"]}}&nbsp; &nbsp;
+                                percentage pass: {{"%.1f"|format(pass_percent|float) }}%&nbsp; &nbsp; percentage failure: {{"%.1f"|format(fail_percent|float) }}%&nbsp; &nbsp;
+                                 Name of teacher: {{subject["teachers_name"].upper()}}&nbsp; &nbsp;
+                                 Total score: {{subject["total_score"]}}&nbsp; &nbsp;
+                                 Class average: {{"%.2f"|format(subject["class_average"]|float)}}</td>
+                        </tr> 
+                </tbody>
+                </table>
+            </div>
+{%endfor%}
+</body>

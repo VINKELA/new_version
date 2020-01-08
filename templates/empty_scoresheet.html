@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    upload scoresheet
+{% endblock %}
+
+{% block main %}
+<div><h6 class="blue">Hi {{subject_info["subject_teacher"].upper()}}!</h6></div> 
+<div><h6 class="blue">Select scores for {{setting[0]["classname"].upper()}} students in {{subject_info["subject"].upper()}}</h6></div>
+
+<form action="/confirm_scoresheet" id="confirm" method="post">
+  <input type="hidden" name="button" value="{{classinfo["id"]}}">
+ <table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">CA </th>
+       <th scope="col">TEST </th>
+         <th scope="col">EXAM </th>
+    </tr>
+  </thead>
+  <tbody>
+
+  
+{% for student in class_names %}
+        {% set id = student["id"]|string %}
+        <tr><div class="row" > <td colspan="4"><h6>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}}</h6></div>
+          <div class="row">
+        <div class="col">
+         {% set cascore = "cascore"+ id %}
+                    <select name="{{cascore}}" id="ca"  aria-required="true">
+                    <option  value="" selected="">ca score</option>
+                    <option  value="0" >0</option>
+                      {%for i in range(setting[0]["ca"])%}
+                      
+                            <option  value="{{i+1}}">{{i+1}}</option>
+                       {%endfor%}
+                    </select>
+                    <div class="arrow"></div>
+         </div>
+
+        <div class="col">
+         {% set testscore = "testscore"+ id %}
+                    <select name="{{testscore}}" id="test"  aria-required="true">
+                    <option  value="" selected="">test score</option>
+                    <option  value="0" >0</option>
+                      {%for i in range(setting[0]["test"])%}
+                            <option  value="{{i+1}}">{{i+1}}</option>
+                       {%endfor%}
+                    </select>
+                    <div class="arrow"></div>
+        </div>
+        <div class="col">
+         {% set examscore = "examscore"+ id %}
+                    <select name="{{examscore}}" id="exam"  aria-required="true">
+                    <option  value="" selected="" >exam score</option>
+                    <option  value="0" >0</option>
+                      {%for i in range(setting[0]["exam"])%}
+                            <option  value="{{i+1}}">{{i+1}}</option>
+                       {%endfor%}
+                    </select>
+                    <div class="arrow"></div>
+        </div>
+      </div>
+  </div></td></tr>
+{% endfor %}
+</table>
+<div class="form-w3ls row">
+  <div class=" col"><button class="sign-in" id="empty" type="submit">Submit</button></form></div>
+  <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="cancel" id="password_button">CANCEL</button></div>
+</div>
+
+<script src="/static/js/empty_scoresheet.js"></script>
+
+{% endblock %}

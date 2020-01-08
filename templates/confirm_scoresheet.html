@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}
+    confirm classlist
+{% endblock %}
+{% block main %}
+<div><h6 class="blue"> Subject: {{details2["subject"].upper()}}</h6></div>
+<div><h6 class="blue">Class: {{details[0]["classname"].upper()}}</h6></div>
+<div><h6 class="blue"> Subject Teacher: {{details2["subject_teacher"].upper()}}</h6></div> 
+<form action="/submitted" id="submitted" method="post">
+  <input type="hidden" value="{{class_id}}" name="button">
+ <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">NAME</th>
+    <th scope="col">CA</th>
+      <th scope="col">TEST</th>
+    <th scope="col">EXAM</th>
+
+    </tr>
+  </thead>
+  <tbody>
+{% for student in students %}
+    <tr>
+        {% set id = student["id"]|string %}
+        {% set id = student["id"]|string %}
+            <td>{{loop.index}}. {{student[2]}} {{student[1]}} {{student[3]}}</td>
+            <td>{{student[4]}}</td>
+            <td>{{student[5]}}</td>
+            <td>{{student[6]}}</td>
+    </tr>
+{% endfor %}
+      </tbody>
+
+</table>
+<div class="row">
+<div class="form-w3ls col">
+      <button class="sign-in"  id="btnsubmit" type="submit" >Confirm</button>
+
+ </div>
+
+ </form>
+ <div class="form-w3ls col">
+     <form action="/submit_score" method="get">
+ <button class="sign-in" name="cancel" type="submit" value="submit">Cancel</button>
+ </form>
+</div>
+ </div>
+  <!-- js files -->
+  <script src='/static/js/jquery.min.js'></script>
+  <script src="/static/js/confirm.js"></script>
+ <!-- /js files -->
+ 
+{% endblock %}

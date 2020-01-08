@@ -1,0 +1,518 @@
+{% extends "layout.html" %}
+{% block title %}
+{{classData[0]["classname"]}}
+{% endblock %}
+{% block main %}
+<div class="blue">
+<form method="POST" action="/customize_school" id="customize_form">
+<input type="hidden" value="{{class_setting["id"]}}" name="class_id"/>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th colspan="3">Setting</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                    <td>General password</td>
+                    <td colspan="2"><input name="general_password" type="password" placeholder="password" id="general_password"><div class="red" id="password_msg"></div></td>
+                </tr> 
+        <tr>
+            <td rowspan="2">SET Session/Term</td>
+            <td colspan="2">
+                    <div>Session</div>
+                    <select name="session"   aria-required="true">
+                            <option   selected="" disabled="">{{schoolInfo[0]["current_session"]}}</option>
+                            <option  value="2018/2019">2018/2019</option>
+                            <option  value="2019/2020">2019/2020</option>
+                            <option  value="2020/2021">2020/2021</option>
+                            <option  value="2021/2022">2021/2022</option>
+                            </select>
+                            <div class="arrow"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                    <div>Term</div>
+                    <select name="term"   aria-required="true">
+                            <option   selected="" disabled="">{{schoolInfo[0]["current_term"]}}</option>
+                            <option  value="1">first</option>
+                            <option  value="2">second</option>
+                            <option  value="3">third</option>
+                            </select>
+                            <div class="arrow"></div>
+            </td>
+</tr>
+{% if class_setting | length > 0%}
+<tr>
+    <td rowspan="4">Background</td>
+    <td>Background color</td>
+    <td><input name="background_color" type="color" value="{{class_setting[0]["background_color"]}}"></td>
+</tr>
+<tr>
+        <td>Choose text color</td>
+        <td>
+            <input name="text_color" type="color" value="{{class_setting[0]["text_color"]}}">
+        </td>
+</tr>
+<tr>
+        <td>line color</td>
+        <td>
+            <input name="line_color" type="color" value="{{class_setting[0]["line_color"]}}">
+        </td>
+</tr>
+<tr>
+    <td colspan="2">
+         <div>Background font</div>
+        <select  name="background_font" >
+                <option selected="selected" disabled="">{{class_setting[0]["background_font"]}}</option>
+                <option>Arial</option> 
+                <option>Arial Black</option>
+                <option>Arial Narrow</option>
+                <option>Arial Rounded MT Bold</option>
+                <option>Avant Garde</option>
+               <option> Calibri</option>
+                <option>Candara</option>
+                <option>Century Gothic</option>
+                <option>Franklin Gothic Medium</option>
+                <option>Futura</option>
+                <option>Geneva</option>
+                <option>Gill Sans</option>
+                <option>Helvetica</option>
+                <option>Impact</option>
+                <option>Lucida Grande</option>
+                <option>Optima</option>
+                <option>Segoe UI</option>
+                <option>Tahoma</option>
+                <option>Trebuchet MS</option>
+                <option>Verdana</option>
+                <option>Big Caslon</option>
+                <option>Bodoni MT</option>
+                <option>Book Antiqua</option>
+                <option>Calisto MT</option>
+                <option>Cambria</option>
+                <option>Didot</option>
+                <option>Garamond</option>
+                <option>Georgia</option>
+                <option>Goudy Old Style</option>
+                <option>Hoefler Text</option>
+                <option>Lucida Bright</option>
+                <option>Palatino</option>
+                <option>Perpetua</option>
+                <option>Rockwell</option>
+                <option>Rockwell Extra Bold</option>
+                <option>Baskerville</option>
+                <option>Times New Roman</option>
+                <option>Consolas</option>
+                <option>Courier New</option>
+                <option>Lucida Console</option>
+                <option>Lucida Sans Typewriter</option>
+                <option>Monaco</option>
+                <option>Andale Mono</option>
+                <option>Fantasy</option>
+                <option>Copperplate</option>
+                <option>Papyrus</option>
+                <option>Brush Script MT</option>
+                
+    </td>
+</tr>
+<tr>
+    <td rowspan="6"> Customize Letter-heading</td>
+    <td colspan="2"><select  name="ld_position" value="{{class_setting[0]["ld_position"]}}">
+            <div>letter heading position</div>
+            <option  {%if class_setting["ld_position"]=="center"%} selected="selected" {%endif%}> center</option>
+            <option  {%if class_setting["ld_position"]=="left"%} selected="selected" {%endif%} >left</option>
+            <option  {%if class_setting["ld_position"]=="right"%} selected="selected"{%endif%}>right</option>
+            <option  {%if class_setting["ld_position"]=="justified"%} selected="selected"{%endif%}>justified</option>
+            </select>
+            <div class="arrow"></div>
+    </td>
+</tr>
+
+<tr>
+<td colspan="2">
+    <div>letter heading font</div>
+    <select  name="l_font" >
+            <option selected="selected" disabled="">{{class_setting[0]["l_font"]}}</option>
+            <option>Arial</option> 
+            <option>Arial Black</option>
+            <option>Arial Narrow</option>
+            <option>Arial Rounded MT Bold</option>
+            <option>Avant Garde</option>
+            <option> Calibri</option>
+            <option>Candara</option>
+            <option>Century Gothic</option>
+            <option>Franklin Gothic Medium</option>
+            <option>Futura</option>
+            <option>Geneva</option>
+            <option>Gill Sans</option>
+            <option>Helvetica</option>
+            <option>Impact</option>
+            <option>Lucida Grande</option>
+            <option>Optima</option>
+            <option>Segoe UI</option>
+            <option>Tahoma</option>
+            <option>Trebuchet MS</option>
+            <option>Verdana</option>
+            <option>Big Caslon</option>
+            <option>Bodoni MT</option>
+            <option>Book Antiqua</option>
+            <option>Calisto MT</option>
+            <option>Cambria</option>
+            <option>Didot</option>
+            <option>Garamond</option>
+            <option>Georgia</option>
+            <option>Goudy Old Style</option>
+            <option>Hoefler Text</option>
+            <option>Lucida Bright</option>
+            <option>Palatino</option>
+            <option>Perpetua</option>
+            <option>Rockwell</option>
+            <option>Rockwell Extra Bold</option>
+            <option>Baskerville</option>
+            <option>Times New Roman</option>
+            <option>Consolas</option>
+            <option>Courier New</option>
+            <option>Lucida Console</option>
+            <option>Lucida Sans Typewriter</option>
+            <option>Monaco</option>
+            <option>Andale Mono</option>
+            <option>Fantasy</option>
+            <option>Copperplate</option>
+            <option>Papyrus</option>
+            <option>Brush Script MT</option>
+            
+</td>
+</tr>
+<tr>
+<td>
+        <div>letter heading font weight</div>
+        <select name="l_weight"  value="{{class_setting["l_weight"]}} aria-required="true">
+            <option selected="selected" disabled="">{{class_setting[0]["l_weight"]}}</option>
+            <option>Bold</option> 
+            <option>normal</option>
+            <option>bolder</option>
+            <option>lighter</option>
+            <option>100</option>
+           <option>200</option>
+           <option>400</option>
+           <option>600</option>
+           <option>700</option>
+           <option>800</option>
+           <option>900</option>
+
+
+                </select>
+                <div class="arrow"></div>
+</td>
+</tr>
+
+<tr>
+<div>letter heading color</div>
+<td>
+    <input type="color"   name="l_color" value="{{class_setting[0]["l_color"]}}">
+</td>
+</tr>
+<tr>
+    <td>
+        Add text shadow to header
+    </td>
+    <td>
+        {%if class_setting["shadow"]== 'on'%}
+        <input type="checkbox" name="shadow" id="shadow"  checked>
+        {%else%}
+        <input type="checkbox" name="shadow"   id="shadow">
+        {%endif%}
+    </td>
+</tr>
+
+<tr>
+        <td colspan="2">
+                <div>letter heading font-size</div>
+                <select name="l_font-size"   aria-required="true">
+                        <option  value="" selected="" disabled="">{{class_setting[0]["l_fontsize"]}}</option>
+                          {%for i in range(100)%}
+                                <option  value="{{i+1}}px">{{i+1}}px</option>
+                           {%endfor%}
+                        </select>
+                        <div class="arrow"></div>
+        </td>
+
+</tr>
+<tr>
+<td rowspan="11">School detail and other information</td>
+<td colspan="2">
+        <div> School details font</div>
+            
+    <select  name="sd_font" >
+            <option selected="selected" disabled="">{{class_setting[0]["sd_font"]}}</option>
+            <option>Arial</option> 
+            <option>Arial Black</option>
+            <option>Arial Narrow</option>
+            <option>Arial Rounded MT Bold</option>
+            <option>Avant Garde</option>
+           <option> Calibri</option>
+            <option>Candara</option>
+            <option>Century Gothic</option>
+            <option>Franklin Gothic Medium</option>
+            <option>Futura</option>
+            <option>Geneva</option>
+            <option>Gill Sans</option>
+            <option>Helvetica</option>
+            <option>Impact</option>
+            <option>Lucida Grande</option>
+            <option>Optima</option>
+            <option>Segoe UI</option>
+            <option>Tahoma</option>
+            <option>Trebuchet MS</option>
+            <option>Verdana</option>
+            <option>Big Caslon</option>
+            <option>Bodoni MT</option>
+            <option>Book Antiqua</option>
+            <option>Calisto MT</option>
+            <option>Cambria</option>
+            <option>Didot</option>
+            <option>Garamond</option>
+            <option>Georgia</option>
+            <option>Goudy Old Style</option>
+            <option>Hoefler Text</option>
+            <option>Lucida Bright</option>
+            <option>Palatino</option>
+            <option>Perpetua</option>
+            <option>Rockwell</option>
+            <option>Rockwell Extra Bold</option>
+            <option>Baskerville</option>
+            <option>Times New Roman</option>
+            <option>Consolas</option>
+            <option>Courier New</option>
+            <option>Lucida Console</option>
+            <option>Lucida Sans Typewriter</option>
+            <option>Monaco</option>
+            <option>Andale Mono</option>
+            <option>Fantasy</option>
+            <option>Copperplate</option>
+            <option>Papyrus</option>
+            <option>Brush Script MT</option>
+</td>
+</tr>
+<tr>
+<td>
+    School details color
+</td>
+<td>
+    <input type="color"   name="sd_color" value="{{class_setting[0]["sd_color"]}}">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+        <div>School details font-size</div>
+
+        <select name="sd_fontsize"   aria-required="true">
+                <option   selected="" disabled="">{{class_setting[0]["sd_fontsize"]}}</option>
+                  {%for i in range(100)%}
+                        <option  value="{{i+1}}px">{{i+1}}px</option>
+                   {%endfor%}
+                </select>
+                <div class="arrow"></div>
+</td>
+</tr>
+
+<tr>
+<td colspan="2"><select aria-required="true" name="sd_position">
+        <div>School details position</div>
+        <option selected="selected" disabled="">{{class_setting[0]["sd_position"]}}</option>
+        <option>center</option>
+        <option>left</option>
+        <option>right</option>
+        </select>
+        <div class="arrow"></div>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    <div>Add school email</div>      
+<input type="text"  name="sd_email" value="{{class_setting[0]["sd_email"]}}">
+</td>
+</tr>
+<tr>
+<td>
+Use admin email
+</td>
+<td>
+{%if class_setting[0]["admin_email"]== 'on'%}
+<input type="checkbox" name="admin_email"   checked>
+{%else%}
+<input type="checkbox" name="admin_email">
+{%endif%}
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<div>Add address</div>
+<input type="text"  name="address" value="{{class_setting[0]["address"]}}">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<div>Add P.O BOX</div>
+<input type="text"  name="po_box" value="{{class_setting[0]["po_box"]}}">
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<div>Add phone numbers</div>
+<input type="text"  name="phone" value="{{class_setting[0]["phone"]}}">
+</td>
+</tr>
+<tr>
+<td>
+Next term
+</td>
+<td>
+<input type="date"  name="next_term" value="{{class_setting[0]["next_term"]}}">
+</td>
+</tr>
+
+<tr>
+<td colspan="2">
+        <div>Other information</div>
+                
+<input type="text" " name="sd_other" value="{{class_setting[0]["sd_other"]}}">
+</td>
+</tr>
+
+<tr>
+<td rowspan="4">student details</td>
+
+<td colspan="2">
+        <div>
+                Student details font
+        </div>
+<select  name="std_font" >
+<option selected="selected" disabled="">{{class_setting[0]["std_font"]}}</option>
+<option>Arial</option> 
+<option>Arial Black</option>
+<option>Arial Narrow</option>
+<option>Arial Rounded MT Bold</option>
+<option>Avant Garde</option>
+<option> Calibri</option>
+<option>Candara</option>
+<option>Century Gothic</option>
+<option>Franklin Gothic Medium</option>
+<option>Futura</option>
+<option>Geneva</option>
+<option>Gill Sans</option>
+<option>Helvetica</option>
+<option>Impact</option>
+<option>Lucida Grande</option>
+<option>Optima</option>
+<option>Segoe UI</option>
+<option>Tahoma</option>
+<option>Trebuchet MS</option>
+<option>Verdana</option>
+<option>Big Caslon</option>
+<option>Bodoni MT</option>
+<option>Book Antiqua</option>
+<option>Calisto MT</option>
+<option>Cambria</option>
+<option>Didot</option>
+<option>Garamond</option>
+<option>Georgia</option>
+<option>Goudy Old Style</option>
+<option>Hoefler Text</option>
+<option>Lucida Bright</option>
+<option>Palatino</option>
+<option>Perpetua</option>
+<option>Rockwell</option>
+<option>Rockwell Extra Bold</option>
+<option>Baskerville</option>
+<option>Times New Roman</option>
+<option>Consolas</option>
+<option>Courier New</option>
+<option>Lucida Console</option>
+<option>Lucida Sans Typewriter</option>
+<option>Monaco</option>
+<option>Andale Mono</option>
+<option>Fantasy</option>
+<option>Copperplate</option>
+<option>Papyrus</option>
+<option>Brush Script MT</option>
+</td>
+
+</tr>
+<tr>
+<td>
+Student details color
+</td>
+<td>
+<input type="color"   name="std_color" value="{{class_setting[0]["std_color"]}}">
+</td>
+</tr>
+<tr>
+
+<td colspan="2">
+        <div>
+                Student details font-size
+                </div>
+<select name="std_fontsize"   aria-required="true">
+        <option   selected="" disabled="">{{class_setting[0]["std_fontsize"]}}</option>
+          {%for i in range(100)%}
+                <option  value="{{i+1}}px">{{i+1}}px</option>
+           {%endfor%}
+        </select>
+        <div class="arrow"></div>
+</td>
+
+</tr>
+<tr>
+<td colspan="2">
+        <div>Student details position</div>
+    <select aria-required="true" name="std_position">
+<option selected="selected" disabled="">{{class_setting[0]["std_position"]}}</option>
+<option>center</option>
+<option>left</option>
+<option>right</option>
+</select>
+<div class="arrow"></div>
+</td>
+
+</tr>
+<tr>
+    <td colspan="2">Email notification</td>
+    {%if class_setting[0]["email_notification"]== 'on' %}
+    <td><input type="checkbox" name="email_notification" id=""  checked></td>
+    {%else%}
+    <td><input type="checkbox" name="email_notification" id=""></td>
+    {%endif%}
+</tr>
+   
+<tr>
+    <td colspan="2">Watermark</td>
+    {%if class_setting[0]["watermark"]== 'on' %}
+    <td><input type="checkbox" name="watermark" id=""  checked></td>
+    {%else%}
+    <td><input type="checkbox" name="watermark" id=""></td>
+    {%endif%}
+</tr>`
+
+{%endif%}
+    </tbody>
+</table>
+<div class="row">
+<div class="form-w3ls col">
+        <button class="sign-in"  id="customize_submit" type="submit">Submit</button>
+</div>
+</form>
+<div class="form-w3ls col">
+<form action="/cancel_portfolio" id="cancel" method="POST"> <button class="sign-in"  type="submit">Back</button></form>
+</div>
+</form>
+</div>
+</div>
+
+<!-- js files -->
+ <script src='/static/js/jquery.min.js'></script>
+ <script src="/static/js/school_settings.js"></script>
+<!-- /js files -->
+
+{% endblock %}

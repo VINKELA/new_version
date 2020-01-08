@@ -1,0 +1,27 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+verify admin
+{% endblock %}
+
+{% block main %}
+<div class="single_form">
+<div class="form-w3ls">
+<form action="/admin_verification" id="admin_form" method="post">            
+<input type="password" name="password" placeholder="admin password" />
+<div class="red" id="msg_pass"></div>
+<div class="row">
+<div class="col"><button class="sign-in" id="admin_button">VERIFY </button></div>
+</form>
+<div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in">CANCEL</button></div>
+</form>
+</div>
+</div>
+</div>
+ <!-- js files -->
+ <script src='/static/js/jquery.min.js'></script>
+ <script src="/static/js/veiwclass.js"></script>
+<!-- /js files -->
+
+{% endblock %}

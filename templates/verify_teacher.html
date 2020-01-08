@@ -1,0 +1,37 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+verify teacher
+{% endblock %}
+
+{% block main %}
+      {% set student_id = id|string %}
+      {% set class_id = classData[0]["id"]|string %}
+<div class="single_form">
+<div class="form-w3ls">
+
+<form action="/edit_student" method="post" id="verify_teacher_form">            
+<input type="password" name="password" id="password"placeholder="password" />
+<div class="red" id="teacher_msg"></div>
+<input type="hidden" name="class_id" id="id" value="{{class_id}}"/>
+<input type="hidden" name="student_id" value="{{student_id}}"/>
+<div class="row">
+      <div class="col"><button class="sign-in" id="verify_teacher">VERIFY</button></form></div>
+      <div class="col">
+                  <form action="/cancel" method="post">
+                    <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
+                    <button class="sign-in"  type="submit">cancel</button>
+                  </form>
+      </div>
+</div>
+
+</div>
+</div>
+  
+ <!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/veiwclass.js"></script>
+<!-- /js files -->
+
+ {% endblock %}
