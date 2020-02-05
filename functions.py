@@ -7,9 +7,11 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message, Mail
 import random
 import string
-from model import connect, select_all_from_id, select_all_from_table, create_ca_table, create_classlist_table, create_exam_table, create_grades_table, create_test_table, create_mastersheet_table, create_settings_table, create_subjects_table, create_subject_position_table, drop_table,delete_from_id
-import psycopg2.extras
-from psycopg2 import sql
+from model import connect, select_all_from_table, create_ca_table, create_classlist_table,\
+     create_exam_table, create_grades_table, create_test_table, create_mastersheet_table, create_settings_table,\
+     create_subjects_table, create_subject_position_table, drop_table,delete_from_id, create_classes_table, create_terms_table,\
+     create_settings_table, select_school_by_id, select_school_by_username,\
+     select_school_by_email, insert_into_table, update_table, select_columns_by_attr, select_all_from_row, select_all_from_row_with_and, copy_table
 
 
 
@@ -46,25 +48,25 @@ def database(id):
         raise ValueError('id must be an Integer greater than 0')
     tables = {}
     # format class tables names
-    school = select_all_from_id('school',session.get('user_id'))
+    school = select_school_by_id(session.get('user_id'))
     current_session = school[0]["current_session"]
     current_term = school[0]["current_term"]
     tables["class_id"] = id
     tables["school_id"] = session["user_id"]
     schoolId = session["user_id"]
     tables["terms"] = "terms"+"_"+str(schoolId)
-    termsql.Identifierifier = str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
-    classsql.Identifierifier = str(tables["class_id"])+"_"+str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
-    tables["classes"] = "classes"+"_"+termsql.Identifierifier
-    tables["settings"] = "settings"+"_"+termsql.Identifierifier
-    tables["classlist"] = "classlist"+"_"+classsql.Identifierifier
-    tables["ca"]  = "catable"+"_"+classsql.Identifierifier
-    tables["test"] = "testtable"+"_"+classsql.Identifierifier
-    tables["exam"] = "examtable"+"_"+classsql.Identifierifier
-    tables["subjects"] = "subjects"+"_"+classsql.Identifierifier
-    tables["mastersheet"] = "mastersheet"+"_"+classsql.Identifierifier
-    tables["subject_position"] = "subject_position"+"_"+classsql.Identifierifier
-    tables["grade"] = "grade"+"_"+classsql.Identifierifier
+    term_identifier = str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
+    class_identifier = str(tables["class_id"])+"_"+str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
+    tables["classes"] = "classes"+"_"+term_identifier
+    tables["settings"] = "settings"+"_"+term_identifier
+    tables["classlist"] = "classlist"+"_"+ class_identifier
+    tables["ca"]  = "catable"+"_"+class_identifier
+    tables["test"] = "testtable"+"_"+class_identifier
+    tables["exam"] = "examtable"+"_"+class_identifier
+    tables["subjects"] = "subjects"+"_"+class_identifier
+    tables["mastersheet"] = "mastersheet"+"_"+class_identifier
+    tables["subject_position"] = "subject_position"+"_"+class_identifier
+    tables["grade"] = "grade"+"_"+class_identifier
     return tables
 
 # gives the initial of a name
@@ -184,20 +186,14 @@ def assign_student_position(class_id):
     j = 0
     i = 0
     previous = None
-    conn = connect()
-    db = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     for person in student_position:
         if previous == float(person["average"]):
-            db.execute(sql.SQL("UPDATE {mastersheet} SET position = {sposition}  WHERE id ={id}").format(mastersheet = sql.Identifier(tables["mastersheet"]),  sposition = sql.Literal(ith_position(j)), id = sql.Literal(person["id"])))
+            update_table(tables['mastersheet'], 'position',ith_position(j), 'id', person['id'])
         else:
             j = i + 1
-            db.execute(sql.SQL("UPDATE {mastersheet} SET position = {sposition}  WHERE id ={id}").format(mastersheet = sql.Identifier(tables["mastersheet"]),  sposition = sql.Literal(ith_position(j)), id = sql.Literal(person["id"])))
+            update_table(tables['mastersheet'],'position',ith_position(j), 'id', person['id'])
         i = i + 1
         previous = float(person["average"])
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close() 
 
 def assign_subject_position(class_id, subject_id):
     tables = database(class_id)
@@ -209,20 +205,15 @@ def assign_subject_position(class_id, subject_id):
     j = 0
     i = 0
     previous = 101
-    conn = connect()
-    db = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     for person in subject_pos:
         if previous == float(person[subject]):
-            db.execute(sql.SQL("UPDATE {positIon_table} SET {subject} = {position}    WHERE id ={id}").format(positIon_table = sql.Identifier(tables["subject_position"]),subject = sql.Identifier(subject),  position =sql.Literal(ith_position(j)), id = sql.Literal(person["id"])))
+            update_table(tables['subject_position'], subject, ith_position(j), 'id', person['id'])
         else:
             j = i + 1
-            db.execute(sql.SQL("UPDATE {positIon_table} SET {subject} = {position}    WHERE id ={id}").format(positIon_table = sql.Identifier(tables["subject_position"]),subject = sql.Identifier(subject),  position = sql.Literal(ith_position(j)), id = sql.Literal(person["id"])))
+            update_table(tables['subject_position'], subject, ith_position(j), 'id', person['id'] )
         i = i + 1
         previous = float(person[subject])
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close() 
+
 
 def term_tables(classid):
     tables = database(classid)
@@ -296,7 +287,6 @@ def remove_student(student_id, class_id):
     students = select_all_from_table(tables['classlist'])
     totals = select_all_from_id(tables['mastersheet'], student_id)
     class_details = select_all_from_id(tables['settings'], class_id)
-    db.execute("DELETE  FROM {mastersheet} where id={id}".format(mastersheet = tables["mastersheet"], id=student_id))
     delete_from_id(tables['mastersheet'], student_id)
     #for each subject in grades
     for subject in subjects:
@@ -307,20 +297,17 @@ def remove_student(student_id, class_id):
         current = int(subject[the_column])
         #subract 1 from that no_of_column in subjects
         new_total = int(subject["total_score"]) - int(totals[0][str(subject["id"])])
-        conn = connect()
-        db = conn.cursor()
         #subtract students total from subjects total 
-        db.execute(sql.SQL("UPDATE {subjects} SET total_score = {new} WHERE id = {id}").format(subjects=sql.Identifier(tables["subjects"]), new= sql.Literal(new_total) , id =sql.Literal(subject["id"])))
+        update_table(tables['subjects'], 'total_score', new_total, 'id', subjec['id'])
         no_of_students = len(students) - 1
         if no_of_students == 0:
             new_average = 0
         else:
             new_average = new_total /  no_of_students
 
-        if the_grade[0] == "F":
-            db.execute(sql.SQL("UPDATE {subjects} SET no_failed = {new},class_average = {cnew},{no_of_grade} = {gnew} WHERE id = {id}").format(subjects=sql.Identifier(tables["subjects"]), new = sql.Literal(int(subject["no_failed"])-1), id =sql.Literal(subject["id"]), no_of_grade=sql.Identifier(the_column),gnew=sql.Literal(current -1),cnew= sql.Literal(new_average))) 
-        else:
-            db.execute(sql.SQL("UPDATE {subjects} SET no_passed = {new},class_average = {cnew}, {no_of_grade} = {gnew} WHERE id = {id}").format(subjects=sql.Identifier(tables["subjects"]), new = sql.Literal(int(subject["no_passed"])-1), id =sql.Literal(subject["id"]) , no_of_grade=sql.Identifier(the_column),gnew=sql.Literal(current -1),cnew= sql.Literal(new_average))) 
+        update_table(tables['subjects'], ['class_average', the_column]\
+            [new_average, current-1], 'id', subject['id'] )
+
         assign_subject_position(class_id, subject["id"])
     student_average = totals[0]["average"]
     pass_mark = grade(0)["pass_mark"]
@@ -331,10 +318,6 @@ def remove_student(student_id, class_id):
     delete_from_id(tables['subject_position'], student_id)
     delete_from_id(tables['classlist'], student_id)
     assign_student_position(class_id)
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close()
 
 
 
@@ -347,12 +330,8 @@ def add_student(student_id, class_id):
     class_details = select_all_from_id(tables['classes'],class_id)
     #for each subject in grades
     student_total = 0
-    passed = 0
-    failed = 0
     new_total = 0
     pass_mark = grade(0)["pass_mark"]
-    conn = connect()
-    db = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     for subject in subjects:
         student_total = student_total + int(totals[0][str(subject["id"])])
@@ -366,39 +345,25 @@ def add_student(student_id, class_id):
         #subtract students total from subjects total 
         previous = select_all_from_id(tables['grades'], student_id)
         new_no = int(previous[0][the_column])  + 1
-        if the_grade == "F":
-            db.execute(sql.SQL("UPDATE {subjects} SET no_failed = {new},total_score = {tnew}, class_average = {dnew},{no_of_grade} = {gnew} WHERE id = {id}").format(subjects=sql.Identifier(tables["subjects"]), new = sql.Literal(int(subject["no_failed"])+1), id =sql.Literal(subject["id"]),dnew= sql.Literal(new_average),gnew=sql.Literal(current + 1), tnew= sql.Literal(int(new_total)) ,no_of_grade=sql.Identifier(the_column)))
-            failed = failed + 1 
-        else:
-            db.execute(sql.SQL("UPDATE {subjects} SET no_passed = {new},total_score = {tnew}, class_average = {dnew}, {no_of_grade} = {gnew} WHERE id = {id}").format(subjects=sql.Identifier(tables["subjects"]), new = sql.Literal(int(subject["no_passed"])+1), id =sql.Literal(subject["id"]),dnew= sql.Literal(new_average),gnew=sql.Literal(current + 1), tnew= sql.Literal(int(new_total)) ,no_of_grade=sql.Identifier(the_column)))
-            passed = passed + 1
-        db.execute(sql.SQL("UPDATE {grades} SET {no_of_grade} = {new}  WHERE id = {id}").format(grades=sql.Identifier(tables["grade"]), no_of_grade=sql.sql.Identifierifer(the_column),new=sql.Literal(new_no), id =sql.Literal(student_id)))
+ 
+        update_table(tables['subjects'],['total_score', 'class_average', the_column],\
+                [new_total, new_average, (current + 1) ], 'id', subject['id'])
+        update_table(tables['grade'],the_column, new_no, 'id', student_id)
         assign_subject_position(class_id, subject["id"])
     if len(subjects) > 	0:
         student_average = student_total/len(subjects)
-        db.execute(sql.SQL("UPDATE {mastersheet} SET average = {new},total_score = {tnew} WHERE id={id}").format(mastersheet=sql.Identifier(tables["mastersheet"]), new=sql.Literal(student_average), id=sql.Literal(student_id), tnew=sql.Literal(student_total)))
+        update_table(tables['mastersheet'], ['average', 'total_score'], [student_average,student_total], 'id', student_id)
         if pass_mark > student_average:
-            db.execute(sql.SQL("UPDATE {result} Set no_of_failures ={new_fail} WHERE id={id}").format(result = sql.Identifier(tables["classes"]), new_fail = sql.Literal(int(class_details[0]["no_of_failures"])+1), id=sql.Literal(class_id)))
+            update_table(tables['classes'],'no_of_failures',(class_details[0]['no_of_failures'] + 1), 'id', class_id)
         else:
-            db.execute(sql.SQL("UPDATE {result} Set no_of_passes={new_pass} WHERE id={id}").format(result =sql.Identifier(tables["classes"]), new_pass = sql.Literal(int(class_details[0]["no_of_passes"])+1), id=sql.Literal(class_id)))
+            update_table(tables['classes'],'no_of_passes',(class_details[0]['no_of_passes'] + 1), 'id', class_id)
         assign_student_position(class_id)
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close()
 
 
 
 def session_term_check(session,term):
-    conn = connect()
-    db = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    tables = database(0)
-    db.execute(sql.SQL("SELECT * FROM {term_table}  WHERE term={term} AND session={session}").format(term_table= sql.Identifier(tables["terms"]), term = sql.Literal(term), session = sql.Literal(session) ))
-    session_columns = db.fetchall()
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close()
+    tables = database(0)    
+    session_columns = select_all_from_row_with_and(tables['terms'],'terms', term,'session', session)
     if len(session_columns) > 0:
         return True
     else:
@@ -406,22 +371,20 @@ def session_term_check(session,term):
 
 
 def new_term(school_session,term):
-    conn = connect()
-    db = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     tables = database(0)
     selected_term = term
     selected_session = school_session
     former_term_settings = select_all_from_table(tables['settings'])
     new_session = selected_session+"_"+selected_term
-    db.execute(sql.SQL("INSERT INTO {terms}(session, term)VALUES({this_session},{this_term})").format(terms = sql.Identifier(tables['terms']), this_session = sql.Literal(session), this_term = sql.Literal(term)))
+    insert_into_table(tables['terms'],['session','term'],[session, term])
     class_term_data = "settings"+"_"+str(selected_term)+"_"+str(selected_session)+"_"+str(session["user_id"])
-    db.execute(sql.SQL("CREATE TABLE {result} AS  TABLE {class_settings}").format(result = sql.Identifier(class_term_data), class_settings= sql.Identifier(tables["settings"])))
-
+    copy_table(class_term_data, tables['settings'])
     for  clas in former_term_settings:
         former = database(clas["id"])
         class_subjects = select_all_from_id(former["subjects"], clas["id"])
         # format class tables names
-        classsql.Identifierifier = str(clas["id"])+"_"+str(selected_term)+"_"+str(selected_session)+"_"+str(former["school_id"])
+        classsql.Identifierifier = str(clas["id"])+"_"+str(selected_term)+"_"+\
+            str(selected_session)+"_"+str(former["school_id"])
         classlist = "classlist"+"_"+classsql.Identifierifier
         ca  = "catable"+"_"+classsql.Identifierifier
         test = "testtable"+"_"+classsql.Identifierifier
@@ -432,7 +395,7 @@ def new_term(school_session,term):
         grade = "grade"+"_"+classsql.Identifierifier
 
         # create classlist
-        db.execute(sql.SQL("CREATE TABLE {classlist} AS TABLE {former_classlist}").format(classlist =sql.Identifier(classlist), former_classlist=sql.Identifier(former["classlist"])))
+        copy_table(classlist, former['classlist'])
 
         #create tables
         create_subjects_table(subjects)
@@ -445,7 +408,6 @@ def new_term(school_session,term):
 
         # create testtable
         create_test_table(test, classlist)
-
 
         # create examtable
         create_exam_table(exam, classlist)
@@ -464,20 +426,16 @@ def new_term(school_session,term):
         #change pins for  classlist
         i = 0
         for student in current_classlist:
-            db.execute(sql.SQL("UPDATE {this_list} SET pin={new_pin} WHERE id={student_id}").format(this_list = sql.Identifier(classlist), new_pin =  sql.Literal(pins[i]), student_id = student["id"]))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(ca), id =sql.Literal(student["id"])))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(test), id =sql.Literal(student["id"])))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(exam), id =sql.Literal(student["id"])))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(grade), id =sql.Literal(student["id"])))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(subject_position), id =sql.Literal(student["id"])))
-            db.execute(sql.SQL("INSERT INTO {table_name} (id)VALUES({id})").format(table_name = sql.Identifier(mastersheet), id =sql.Literal(student["id"])))
+            update_table(classlist, 'pin', pins[i], 'id', student['id'])
+            update_table(ca, 'id', student['id'])
+            update_table(test,'id', student['id'])
+            update_table(exam, 'id', student['id'])
+            update_table(grade, 'id', student['id'])
+            update_table(subject_position, 'id', student['id'])
+            update_table(mastersheet, 'id', student['id'])
             i = i + 1
     #update term om school
-    db.execute(sql.SQL("UPDATE school SET current_term={value} WHERE id={id}").format(value= sql.Literal(selected_term), id=sql.Literal(session["user_id"])))
-    conn.commit()
-    db.close()
-    if conn is not None:
-        conn.close()
+    update_table('school','current_term', selected_term,'id', session['user_id'])
 
 def generate_pins(length, count, alphabet=string.digits):
   alphabet = ''.join(set(alphabet))

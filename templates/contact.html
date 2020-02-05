@@ -6,9 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>Schoolresultonline: {%block title%}{%endblock%}</title>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
-
+		<title>HTML Education Template</title>
 
 		<!-- Google font -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
@@ -20,15 +18,7 @@
 		<link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
 		<!-- Custom stlylesheet -->
-        <link type="text/css" rel="stylesheet" href="/static/css/style.css"/>
-        
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-        
-        <link href="/static/css/styles.css" rel="stylesheet" media="all"/>
-		
-
+		<link type="text/css" rel="stylesheet" href="/static/css/style.css"/>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,62 +32,112 @@
 
 		<!-- Header -->
 		<header id="header">
-			<div >
-                <!-- Navigation -->
-				<div id='nav'>
-					<nav   class="navbar navbar-expand-md navbar-light bg-light border navbar-fixed-top">
-						<a class="navbar-brand" href="/"><h3><span class="blue">School</span><span id="headred">result</span></h3></a>
-						<button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggle" data-target="#navbar" data-toggle="collapse" type="button">
-							<span></span>
-						</button>
-					
+			<div class="container">
 
-						<div class="collapse navbar-collapse" id="navbar">
-							{% if session.user_id %}                  
-								<ul class="navbar-nav ml-auto mt-2">
-								<li class="nav-item"><a class="nav-link" href="/login">Home</a></li>
-								<li class="nav-item"><a class="nav-link" href="/createClass">Add Class</a></li>
-								<li class="nav-item"><a class="nav-link" href="/submit_score">Submit score</a></li>
-								<li class="nav-item"><a class="nav-link" href="/print_pins">Print Pins </a></li>
-								<li class="nav-item"><a class="nav-link" href="/school_settings">School settings</a></li>
-							   <!-- <ul class="navbar-nav ml-auto mt-2">
-									<li class="nav-item"><a class="nav-link" href="/manage_password">Manage Password </a></li>
-								</ul> -->
-									<li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-								</ul>
-							{% else %}
-								 <ul class="navbar-nav ml-auto mt-2">
-									<li class="nav-item"><a class="nav-link" href="#tab-group">HOME</a></li>
-									<li class="nav-item"><a class="nav-link" href="#tab-group">LOGIN</a></li>
-									<li class="nav-item"><a class="nav-link" href="/register">REGISTER</a></li>
-									<li class="nav-item"><a class="nav-link" href="/check_results">RESULT</a></li>
-									<li class="nav-item"><a class="nav-link" href="#">BLOG</a></li>
-									<li class="nav-item"><a class="nav-link" href="/about_us">ABOUT</a></li>
-									<li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
-								</ul>
-							{% endif %}
-						</div>
-					</nav>
+				<div class="navbar-header">
+					<!-- Logo -->
+					<div class="navbar-brand">
+						<a class="logo" href="index.html">
+							<img src="/static/img/logo.png" alt="logo">
+						</a>
+					</div>
+					<!-- /Logo -->
+
+					<!-- Mobile toggle -->
+					<button class="navbar-toggle">
+						<span></span>
+					</button>
+					<!-- /Mobile toggle -->
 				</div>
-				<div>
+
+				<!-- Navigation -->
+				<nav id="nav">
+					<ul class="main-menu nav navbar-nav navbar-right">
+						<li><a href="index.html">Home</a></li>
+						<li><a href="#">About</a></li>
+						<li><a href="#">Courses</a></li>
+						<li><a href="blog.html">Blog</a></li>
+						<li><a href="contact.html">Contact</a></li>
+					</ul>
+				</nav>
 				<!-- /Navigation -->
 
 			</div>
-			<div>
-				{% if get_flashed_messages() %}
-					<header>
-						<div class="alert alert-primary border text-center red" role="alert">
-							{{ get_flashed_messages() | join(" ") }}
-						</div>
-					</header>
-				{% endif %}
-			</div>
-		
 		</header>
 		<!-- /Header -->
-		<!--main body-->
-		{% block main %}{% endblock %}
-		<!--end of main body-->
+
+		<!-- Hero-area -->
+		<div class="hero-area section">
+
+			<!-- Backgound Image -->
+			<div class="bg-image bg-parallax overlay" style="background-image:url(./img/page-background.jpg)"></div>
+			<!-- /Backgound Image -->
+
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1 text-center">
+						<ul class="hero-area-tree">
+							<li><a href="index.html">Home</a></li>
+							<li>Contact</li>
+						</ul>
+						<h1 class="white-text">Get In Touch</h1>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- /Hero-area -->
+
+		<!-- Contact -->
+		<div id="contact" class="section">
+
+			<!-- container -->
+			<div class="container">
+
+				<!-- row -->
+				<div class="row">
+
+					<!-- contact form -->
+					<div class="col-md-6">
+						<div class="contact-form">
+							<h4>Send A Message</h4>
+							<form>
+								<input class="input" type="text" name="name" placeholder="Name">
+								<input class="input" type="email" name="email" placeholder="Email">
+								<input class="input" type="text" name="subject" placeholder="Subject">
+								<textarea class="input" name="message" placeholder="Enter your Message"></textarea>
+								<button class="main-button icon-button pull-right">Send Message</button>
+							</form>
+						</div>
+					</div>
+					<!-- /contact form -->
+
+					<!-- contact information -->
+					<div class="col-md-5 col-md-offset-1">
+						<h4>Contact Information</h4>
+						<ul class="contact-details">
+							<li><i class="fa fa-envelope"></i>Educate@email.com</li>
+							<li><i class="fa fa-phone"></i>122-547-223-45</li>
+							<li><i class="fa fa-map-marker"></i>4476 Clement Street</li>
+						</ul>
+
+						<!-- contact map -->
+						<div id="contact-map"></div>
+						<!-- /contact map -->
+
+					</div>
+					<!-- contact information -->
+
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /container -->
+
+		</div>
+		<!-- /Contact -->
+
 		<!-- Footer -->
 		<footer id="footer" class="section">
 
@@ -110,7 +150,9 @@
 					<!-- footer logo -->
 					<div class="col-md-6">
 						<div class="footer-logo">
-                        <a class="navbar-brand" href="/login"><h3><span class="blue">School</span><span id="headred">result</span></h3></a>
+							<a class="logo" href="index.html">
+								<img src="/static/img/logo.png" alt="logo">
+							</a>
 						</div>
 					</div>
 					<!-- footer logo -->
@@ -171,11 +213,9 @@
 		<!-- jQuery Plugins -->
 		<script type="text/javascript" src="/static/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/static/js/main.js"></script>
-        <script type=text/javascript>
-            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-        </script>
-    
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+		<script type="text/javascript" src="/static/js/google-map.js"></script>
+		<script type="text/javascript" src="/static/js/main.js"></script>
 
 	</body>
 </html>
