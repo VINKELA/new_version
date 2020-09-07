@@ -7,13 +7,24 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message, Mail
 import random
 import string
+from app import app
 from model import connect, select_all_from_table, create_ca_table, create_classlist_table,\
      create_exam_table, create_grades_table, create_test_table, create_mastersheet_table, create_settings_table,\
      create_subjects_table, create_subject_position_table, drop_table,delete_from_id, create_classes_table, create_terms_table,\
      create_settings_table, select_school_by_id, select_school_by_username,\
      select_school_by_email, insert_into_table, update_table, select_columns_by_attr, select_all_from_row, select_all_from_row_with_and, copy_table
 
+app.config.update(dict(
+    DEBUG = True,
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 587,
+    MAIL_USE_TLS = True,
+    MAIL_USE_SSL = False,
+    MAIL_USERNAME = "schoolresultnigeria@gmail.com",
+    MAIL_PASSWORD = "gmailvenuse123",
+))
 
+mail = Mail(app)
 
 def login_required(f):
     """
@@ -32,7 +43,7 @@ def login_required(f):
 def check_confirmed(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        current_user = select_all_from_id('school',session.get('user_id'))
+        current_user = select_school_by_id(session.get('user_id'))
         if not current_user[0]["confirmed"]:
             flash('Please confirm your account!', 'warning')
             return redirect("/unconfirmed")
@@ -143,8 +154,8 @@ def render_class(class_id, error=None):
     # format class tables names
     tables = database(class_id)
     #query database
-    classrow = select_all_from_id(tables['classes'],class_id)
-    schoolrow = select_all_from_id('school', session['user_id'])
+    classrow = select_all_from_row(tables['classes'], 'id', class_id)
+    schoolrow = select_school_by_id(session['user_id'])
     subjectrow = select_all_from_table(tables['subjects'])
     classlistrow = select_all_from_table(tables['classlist'])
     # render class veiw
@@ -154,7 +165,7 @@ def render_class(class_id, error=None):
 
 def render_portfolio(error=None):
     tables = database(0)
-    rows = select_all_from_id('school', session['user_id'])
+    rows = select_school_by_id(session['user_id'])
     classrows = select_all_from_table(tables['classes'])
     if error:
     	flash(error,'failure')
@@ -282,11 +293,11 @@ def drop_tables(classid):
 
 def remove_student(student_id, class_id):
     tables= database(class_id)
-    student_grade = select_all_from_id(tables['grade'], student_id)
+    student_grade = select_all_from_row(tables['grade'],'id', student_id)
     subjects = select_all_from_table(tables['subjects'])
     students = select_all_from_table(tables['classlist'])
-    totals = select_all_from_id(tables['mastersheet'], student_id)
-    class_details = select_all_from_id(tables['settings'], class_id)
+    totals = select_all_from_row(tables['mastersheet'], 'id',student_id)
+    #class_details = select_all_from_row(tables['settings'],'id', class_id)
     delete_from_id(tables['mastersheet'], student_id)
     #for each subject in grades
     for subject in subjects:
@@ -298,20 +309,20 @@ def remove_student(student_id, class_id):
         #subract 1 from that no_of_column in subjects
         new_total = int(subject["total_score"]) - int(totals[0][str(subject["id"])])
         #subtract students total from subjects total 
-        update_table(tables['subjects'], 'total_score', new_total, 'id', subjec['id'])
+        update_table(tables['subjects'], 'total_score', new_total, 'id', subject['id'])
         no_of_students = len(students) - 1
         if no_of_students == 0:
             new_average = 0
         else:
             new_average = new_total /  no_of_students
 
-        update_table(tables['subjects'], ['class_average', the_column]\
+        update_table(tables['subjects'], ['class_average', the_column],\
             [new_average, current-1], 'id', subject['id'] )
 
         assign_subject_position(class_id, subject["id"])
-    student_average = totals[0]["average"]
-    pass_mark = grade(0)["pass_mark"]
-    delete_from_id(table['ca'], student_id)
+    #student_average = totals[0]["average"]
+    #pass_mark = grade(0)["pass_mark"]
+    delete_from_id(tables['ca'], student_id)
     delete_from_id(tables['grade'], student_id)
     delete_from_id(tables['test'], student_id)
     delete_from_id(tables['exam'], student_id)
@@ -323,11 +334,11 @@ def remove_student(student_id, class_id):
 
 def add_student(student_id, class_id):
     tables= database(class_id)
-    student_grade = select_all_from_id(tables['grade'], student_id)
+    student_grade = select_all_from_row(tables['grade'],'id', student_id)
     all_std = select_all_from_table(tables['grade'])
     subjects = select_all_from_table(tables['subjects'])
-    totals = select_all_from_id(tables['mastersheet'], student_id)
-    class_details = select_all_from_id(tables['classes'],class_id)
+    totals = select_all_from_row(tables['mastersheet'],'id', student_id)
+    class_details = select_all_from_row(tables['classes'],'id',class_id)
     #for each subject in grades
     student_total = 0
     new_total = 0
@@ -343,7 +354,7 @@ def add_student(student_id, class_id):
         new_total = int(subject["total_score"]) + int(totals[0][str(subject["id"])])
         new_average = new_total / len(all_std)
         #subtract students total from subjects total 
-        previous = select_all_from_id(tables['grades'], student_id)
+        previous = select_all_from_row(tables['grades'],'id', student_id)
         new_no = int(previous[0][the_column])  + 1
  
         update_table(tables['subjects'],['total_score', 'class_average', the_column],\
@@ -359,8 +370,6 @@ def add_student(student_id, class_id):
             update_table(tables['classes'],'no_of_passes',(class_details[0]['no_of_passes'] + 1), 'id', class_id)
         assign_student_position(class_id)
 
-
-
 def session_term_check(session,term):
     tables = database(0)    
     session_columns = select_all_from_row_with_and(tables['terms'],'terms', term,'session', session)
@@ -369,30 +378,29 @@ def session_term_check(session,term):
     else:
         return False
 
-
 def new_term(school_session,term):
     tables = database(0)
     selected_term = term
     selected_session = school_session
     former_term_settings = select_all_from_table(tables['settings'])
-    new_session = selected_session+"_"+selected_term
+    #new_session = selected_session+"_"+selected_term
     insert_into_table(tables['terms'],['session','term'],[session, term])
     class_term_data = "settings"+"_"+str(selected_term)+"_"+str(selected_session)+"_"+str(session["user_id"])
     copy_table(class_term_data, tables['settings'])
     for  clas in former_term_settings:
         former = database(clas["id"])
-        class_subjects = select_all_from_id(former["subjects"], clas["id"])
+        #class_subjects = select_all_from_row(former["subjects"],'id', clas["id"])
         # format class tables names
-        classsql.Identifierifier = str(clas["id"])+"_"+str(selected_term)+"_"+\
+        classsql = str(clas["id"])+"_"+str(selected_term)+"_"+\
             str(selected_session)+"_"+str(former["school_id"])
-        classlist = "classlist"+"_"+classsql.Identifierifier
-        ca  = "catable"+"_"+classsql.Identifierifier
-        test = "testtable"+"_"+classsql.Identifierifier
-        exam = "examtable"+"_"+classsql.Identifierifier
-        subjects = "subjects"+"_"+classsql.Identifierifier
-        mastersheet = "mastersheet"+"_"+classsql.Identifierifier
-        subject_position = "subject_position"+"_"+classsql.Identifierifier
-        grade = "grade"+"_"+classsql.Identifierifier
+        classlist = "classlist"+"_"+classsql
+        ca  = "catable"+"_"+classsql
+        test = "testtable"+"_"+classsql
+        exam = "examtable"+"_"+classsql
+        subjects = "subjects"+"_"+classsql
+        mastersheet = "mastersheet"+"_"+classsql
+        subject_position = "subject_position"+"_"+classsql
+        grade = "grade"+"_"+classsql
 
         # create classlist
         copy_table(classlist, former['classlist'])
@@ -422,7 +430,7 @@ def new_term(school_session,term):
         #copy classlist
         tables = database(clas["id"])
         current_classlist = select_all_from_table(classlist)
-        pins = generate_pins(10, len(previous_classlist))
+        pins = generate_pins(10, 30)
         #change pins for  classlist
         i = 0
         for student in current_classlist:
@@ -449,7 +457,7 @@ def generate_pins(length, count, alphabet=string.digits):
     result.add(onepin(length))
   return list(result)
 
-  # send message to email
+  #send message to email
 def send_email(to, subject, template, sender_email):
     msg = Message(
         subject,

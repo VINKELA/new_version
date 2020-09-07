@@ -1,0 +1,17 @@
+psycopg2
+requests
+flask_mail
+requests
+flask-rest-paginate
+Flask
+flask-marshmallow
+Flask-RESTful
+Flask-Session
+Flask-SQLAlchemy
+itsdangerous
+urllib3
+SQLAlchemy
+sqlparse
+marshmallow
+gunicorn
+marshmallow-sqlalchemy

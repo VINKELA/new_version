@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Mirrored from pvradmin.palanivelayudam.net/pvradmin/login_v3.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 08 Dec 2017 00:46:04 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8"/>
+    <title>PVR Admin | Login Page</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <!-- ================== BEGIN BASE CSS STYLE ================== -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <link href="/static/plugins/jquery-ui/themes/base/minified/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="/static/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="/static/css/animate.min.css" rel="stylesheet"/>
+    <link href="/static/css/style.css" rel="stylesheet"/>
+    <link href="/static/css/style-responsive.css" rel="stylesheet"/>
+    <link href="/static/css/theme/default.css" rel="stylesheet" id="theme"/>
+    <link href="/static/css/essential.css" rel="stylesheet"/>
+    <!-- ================== END BASE CSS STYLE ================== -->
+
+    <!-- ================== BEGIN BASE JS ================== -->
+    <script src="/static/plugins/pace/pace.min.js"></script>
+    <!-- ================== END BASE JS ================== -->
+</head>
+<body class="pace-top bg-white">
+
+
+    {% block main %}{% endblock %}
+
+<!-- ================== BEGIN BASE JS ================== -->
+<script src="/static/plugins/jquery/jquery-1.9.1.min.js"></script>
+<script src="/static/plugins/jquery/jquery-migrate-1.1.0.min.js"></script>
+<script src="/static/plugins/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script src="/static/plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--[if lt IE 9]>
+<script src="/static/crossbrowserjs/html5shiv.js"></script>
+<script src="/static/crossbrowserjs/respond.min.js"></script>
+<script src="/static/crossbrowserjs/excanvas.min.js"></script>
+<![endif]-->
+<script src="/static/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/static/plugins/jquery-cookie/jquery.cookie.js"></script>
+<script src="/static/plugins/jquery-cookie/js.cookie.js"></script>
+<!-- ================== END BASE JS ================== -->
+
+<!-- ================== BEGIN PAGE LEVEL JS ================== -->
+<script src="/static/js/app.js"></script>
+<!-- ================== END PAGE LEVEL JS ================== -->
+
+<script>
+    $(document).ready(function () {
+        App.init();
+    });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-66289183-4"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-66289183-4');
+</script>
+</body>
+
+<!-- Mirrored from pvradmin.palanivelayudam.net/pvradmin/login_v3.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 08 Dec 2017 00:46:59 GMT -->
+</html>
