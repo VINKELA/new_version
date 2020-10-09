@@ -2,6 +2,7 @@ import psycopg2.extras
 from psycopg2 import sql
 from config import config
 import logging
+import enum
 logging.basicConfig(level= logging.DEBUG)
 logger = logging.getLogger()
 
@@ -614,4 +615,10 @@ def update_term_settings(table_name,columns,col_values, term, session):
         if conn is not None:
             conn.close() 
         return val
+    
 
+class UserRoles(enum.Enum):
+    SuperAdmin = 1
+    SchoolAdmin = 2
+    ClassAdmin = 3
+    Teacher = 4

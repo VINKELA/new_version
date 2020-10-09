@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from flask import redirect, render_template, request, session, flash
+from flask import redirect, render_template, request, session, flash, Flask
 from functools import wraps
 from operator import itemgetter, attrgetter
 import requests
@@ -7,7 +7,8 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message, Mail
 import random
 import string
-from app import app
+# Configure application
+app = Flask(__name__)
 from model import connect, select_all_from_table, create_ca_table, create_classlist_table,\
      create_exam_table, create_grades_table, create_test_table, create_mastersheet_table, create_settings_table,\
      create_subjects_table, create_subject_position_table, drop_table,delete_from_id, create_classes_table, create_terms_table,\
@@ -456,6 +457,9 @@ def generate_pins(length, count, alphabet=string.digits):
   while len(result) < count:
     result.add(onepin(length))
   return list(result)
+
+def random_string_generator(str_size, allowed_chars):
+    return ''.join(random.choice(allowed_chars) for x in range(str_size))
 
   #send message to email
 def send_email(to, subject, template, sender_email):

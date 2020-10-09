@@ -26,7 +26,7 @@
             <!-- begin login-header -->
             <div class="login-header">
                 <div class="brand">
-                    <img src="/static/Assets/img/user-1.jpg" alt="logo"> PVR Admin
+                    <img src="/static/Assets/img/icon.png" alt="logo"> PVR Admin
                     <small>responsive bootstrap 3 admin template</small>
                 </div>
                 <div class="icon">
@@ -36,12 +36,13 @@
             <!-- end login-header -->
             <!-- begin login-content -->
             <div class="login-content">
-                <form action="#" method="POST" class="margin-bottom-0">
                     <div class="form-group m-b-15">
-                        <input type="text" class="form-control input-lg" placeholder="Email Address" required/>
+                        <input type="text" class="form-control input-lg" placeholder="Email Address" id="username" required/>
+                        <div class="info" id="emailInfo"></div>
                     </div>
                     <div class="form-group m-b-15">
-                        <input type="password" class="form-control input-lg" placeholder="Password" required/>
+                        <input type="password" class="form-control input-lg" id="password" placeholder="Password" required/>
+                        <div class="info" id="passwordInfo"></div>    
                     </div>
                     <div class="checkbox m-b-30">
                         <label>
@@ -49,7 +50,7 @@
                         </label>
                     </div>
                     <div class="login-buttons">
-                        <button type="submit" class="btn btn-success btn-block btn-lg">Sign me in</button>
+                        <button type="submit" id='signInButton'class="btn btn-success btn-block btn-lg" onclick="logIn()">Sign me in</button>
                     </div>
                     <div class="m-t-20 m-b-40 p-b-40 text-inverse">
                         Not a member yet? Click <a href="register_v3.html" class="text-success">here</a> to register.
@@ -58,7 +59,6 @@
                     <p class="text-center">
                         &copy; PVR Admin All Right Reserved 2017
                     </p>
-                </form>
             </div>
             <!-- end login-content -->
         </div>
@@ -155,6 +155,7 @@
     </div>
     <!-- end theme-panel -->
 </div>
+<script src="../static/page_js/login.js"></script>
 <!-- end page container -->
 {%endblock%}
 
