@@ -20,7 +20,7 @@ from model import connect, select_all_from_table, create_ca_table, create_classl
      create_subjects_table, create_subject_position_table, drop_table,delete_from_id, create_classes_table, create_terms_table,\
      create_settings_table, select_school_by_id, select_school_by_username,\
      select_school_by_email, insert_into_table, update_table, select_columns_by_attr, select_all_from_row, select_all_from_row_with_and, copy_table
-from functions import random_string_generator, database
+from functions import random_string_generator, database, login_required
 
 import base64
 import logging
@@ -51,12 +51,7 @@ def handle_error2(e):
     flash(error)
     return render_template("login.html")
 
-@app.route("/")
-def index():
-    if not request.cookies.get("series_id"):
-        session.clear()
-        return render_template("login.html")
-
+# API
 @app.route("/login", methods=["POST","GET"])
 def login():
     try:
@@ -133,7 +128,24 @@ def login():
 
                 # else if account is not confirmed render unconfirmed view
                 else:
-                    return redirect('/unconfirmed')
+                    return jsonify(message='success', data='unconfirmed_user')
     except Exception as e:
         logger.error(e)
         return jsonify(message='fail', data=False)
+
+
+
+
+#Webportal
+@app.route("/")
+def index():
+    if not request.cookies.get("series_id"):
+        session.clear()
+        return render_template("login.html")
+
+@app.route('/portfolio', methods=['GET'])
+# @login_required
+def portfolio():
+    return render_template('portfolio.html')
+
+

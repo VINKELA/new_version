@@ -622,3 +622,9 @@ class UserRoles(enum.Enum):
     SchoolAdmin = 2
     ClassAdmin = 3
     Teacher = 4
+
+class Modules(enum.Enum):
+    School = 1
+    Class = 2
+    Teacher = 3
+    Student = 4

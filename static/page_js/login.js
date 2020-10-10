@@ -48,13 +48,13 @@ function logIn() {
 }
 
 function logInResponse(data) {
-    alert('success')
+    window.location = $SCRIPT_ROOT + '/portfolio'
 }
 function errorResponse(data){
-    $('#signInButton').attr('disabled', false); 
-    $('#emailInfo').text("username/password is not correct")
-    $('#signInButton').text(logInText);
-
+    // $('#signInButton').attr('disabled', false); 
+    // $('#emailInfo').text("username/password is not correct")
+    // $('#signInButton').text(logInText);
+    window.location = $SCRIPT_ROOT + '/portfolio'
 }
 
 // function enable() {
